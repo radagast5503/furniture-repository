@@ -19,5 +19,4 @@ fun Application.httpConfig() {
     install(DefaultHeaders) {
         header("Server-Version", Version.getVersion()) // will send this header with each response
     }
-
 }

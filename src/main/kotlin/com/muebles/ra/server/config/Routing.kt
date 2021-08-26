@@ -12,7 +12,6 @@ import io.ktor.request.*
 fun Application.router() {
     install(AutoHeadResponse)
 
-
     routing {
         install(StatusPages) {
             exception<AuthenticationException> { cause ->
@@ -21,6 +20,12 @@ fun Application.router() {
             exception<AuthorizationException> { cause ->
                 call.respond(HttpStatusCode.Forbidden)
             }
+        }
+    }
+
+    routing {
+        get("/health-check") {
+            call.respond(HttpStatusCode.OK, mapOf("hello" to "world"))
         }
     }
 }

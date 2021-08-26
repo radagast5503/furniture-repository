@@ -13,10 +13,4 @@ fun Application.serialization() {
         gson {
         }
     }
-
-    routing {
-        get("/health-check") {
-            call.respond(HttpStatusCode.OK, mapOf("hello" to "world"))
-        }
-    }
 }

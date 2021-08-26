@@ -1,0 +1,10 @@
+steps:
+  - name: gradle:7
+    entrypoint: gradle
+    args: ["test"]
+  - name: gradle:7
+    entrypoint: gradle
+    args: ["assemble"]
+  - name: gcr.io/cloud-builders/docker
+    args: ["build","-f", "appengine/Dockerfile", "-t", "gcr.io/$PROJECT_ID/furniture-repository", "--build-arg=JAR_FILE=build/libs/furniture-repository.jar", "."]
+images: ["gcr.io/$PROJECT_ID/furniture-repository"]
