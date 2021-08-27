@@ -10,5 +10,7 @@ fun main(args: Array<String>) {
         httpConfig()
         monitoring()
         serialization()
+        injectionManagement()
+
     }.start(wait = true)
 }
