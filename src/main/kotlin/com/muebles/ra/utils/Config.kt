@@ -3,6 +3,7 @@ package com.muebles.ra.utils
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.*
+import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 
 public fun Config.tryGetLong(path: String): Long? = if (hasPath(path)) getLong(path) else null
