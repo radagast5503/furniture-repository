@@ -46,10 +46,6 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
     private val storage =
         StorageOptions.newBuilder().setCredentials(credentials).setProjectId(cfg.projectName()).build().service
 
-    override fun uploadUrl(objectName: String?): Result<URL?> = runCatching {
-        signURL(objectName, HttpMethod.PUT)
-    }
-
     private fun signURL(objectName: String?, method: HttpMethod): URL? {
         val blobInfo = BlobInfo.newBuilder(BlobId.of(cfg.bucketName(), objectName)).build()
         val urlDuration = cfg.urlDuration()
@@ -59,6 +55,10 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
             Storage.SignUrlOption.httpMethod(method),
             Storage.SignUrlOption.withV4Signature()
         )
+    }
+
+    override fun uploadUrl(objectName: String?): Result<URL?> = runCatching {
+        signURL(objectName, HttpMethod.PUT)
     }
 
     override fun downloadUrl(objectName: String?): Result<URL?> = runCatching {
