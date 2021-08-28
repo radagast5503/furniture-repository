@@ -1,15 +1,22 @@
 package com.muebles.ra.server.config
 
+import com.muebles.ra.secrets.URLObtainer
 import io.ktor.features.*
 import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
+import org.springframework.context.annotation.AnnotationConfigApplicationContext
+import org.springframework.stereotype.Service
+import javax.inject.Inject
 
+class AuthenticationException : RuntimeException()
+class AuthorizationException : RuntimeException()
 
-//example
-fun Application.router() {
+fun AnnotationConfigApplicationContext.getUrlObtainer(): URLObtainer = getBean(URLObtainer::class.java)
+
+fun Application.router(ctx: AnnotationConfigApplicationContext) {
     install(AutoHeadResponse)
 
     routing {
@@ -27,8 +34,18 @@ fun Application.router() {
         get("/health-check") {
             call.respond(HttpStatusCode.OK, mapOf("hello" to "world"))
         }
+
+        furnitureRoutes(ctx)
     }
 }
 
-class AuthenticationException : RuntimeException()
-class AuthorizationException : RuntimeException()
+fun Route.furnitureRoutes(ctx: AnnotationConfigApplicationContext) {
+
+    get("/furniture/{name}/uploader") {
+        ctx.getUrlObtainer().uploadUrl(call.parameters["name"])
+            .fold({ url -> call.respond(mapOf("upload_url" to url.toString())) }) {
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to it.toString()))
+            }
+    }
+
+}

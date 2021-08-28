@@ -6,11 +6,10 @@ import io.ktor.server.netty.*
 
 fun main(args: Array<String>) {
     embeddedServer(Netty,8080, host = "0.0.0.0") {
-        router()
+        router(injectionManagement())
         httpConfig()
         monitoring()
         serialization()
-        injectionManagement()
 
     }.start(wait = true)
 }
