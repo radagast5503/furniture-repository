@@ -10,5 +10,7 @@ object Version {
         versionProperties.load(this.javaClass.getResourceAsStream("/version.properties"))
     }
 
-    fun getVersion() : String = versionProperties.getProperty("version") ?: "no version"
+    fun version() : String = versionProperties.getProperty("version") ?: "no version"
+
+    fun environment(): String = System.getenv("ENVIRONMENT") ?: "local"
 }

@@ -3,6 +3,7 @@ package com.muebles.ra.secrets
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.cloud.storage.*
 import com.muebles.ra.utils.Config
+import com.muebles.ra.utils.Version
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Service
@@ -20,7 +21,7 @@ interface URLObtainer {
 open class SpringConfig {
     @Bean
     open fun urlObtainer(cfg: Config, keyObtainer: KeyObtainer): URLObtainer {
-        val env = System.getenv("ENVIRONMENT") ?: "local"
+        val env = Version.environment()
         if (!env.equals("local")) {
             return com.muebles.ra.secrets.SignedUrlGenerator(cfg, keyObtainer)
         }

@@ -10,4 +10,4 @@ gcloud builds submit --config cloudbuild.yaml . # --tag gcr.io/$PROJECT_ID/furni
 echo "Deploying with cloud-run"
 gcloud run deploy furniture-repository --image gcr.io/$PROJECT_ID/furniture-repository \
 --service-account=muebles-ra-sa@$PROJECT_ID.iam.gserviceaccount.com \
---memory 512M
+--memory 512M --allow-unauthenticated false --region us-central1

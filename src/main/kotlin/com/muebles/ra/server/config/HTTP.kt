@@ -3,8 +3,6 @@ package com.muebles.ra.server.config
 import com.muebles.ra.utils.Version
 import io.ktor.features.*
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
 
 fun Application.httpConfig() {
     install(Compression) {
@@ -17,6 +15,6 @@ fun Application.httpConfig() {
         }
     }
     install(DefaultHeaders) {
-        header("Server-Version", Version.getVersion()) // will send this header with each response
+        header("Server-Version", "${Version.version()}-${Version.environment()}") // will send this header with each response
     }
 }
