@@ -10,6 +10,5 @@ fun main(args: Array<String>) {
         httpConfig()
         monitoring()
         serialization()
-
     }.start(wait = true)
 }
