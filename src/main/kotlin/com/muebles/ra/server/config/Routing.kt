@@ -50,8 +50,12 @@ fun Route.furnitureRoutes(ctx: AnnotationConfigApplicationContext) {
     }
 
     get("/furniture/{name}/downloader") {
-        ctx.getUrlObtainer().uploadUrl(call.parameters["name"])
-            .fold({ url -> call.respond(mapOf("download_url" to url.toString())) }) {
+        ctx.getUrlObtainer().downloadUrl(call.parameters["name"])
+            .fold({ url ->
+                run {
+                    call.respond(mapOf("download_url" to url.toString()))
+                }
+            }) {
                 call.respond(HttpStatusCode.InternalServerError, mapOf("error" to it.toString()))
             }
     }

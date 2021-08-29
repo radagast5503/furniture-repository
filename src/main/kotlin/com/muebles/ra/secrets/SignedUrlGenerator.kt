@@ -4,14 +4,12 @@ import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.cloud.storage.*
 import com.muebles.ra.utils.Config
 import com.muebles.ra.utils.Version
-import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.net.URL
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 interface URLObtainer {
     fun uploadUrl(objectName: String?): Result<URL?>
@@ -31,12 +29,18 @@ open class SpringConfig {
 }
 
 class FakeUrlObtainer : URLObtainer {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     override fun uploadUrl(objectName: String?): Result<URL?> {
-        return Result.success(URL("https://fake.com/upload/$objectName"))
+        return Result.success(URL("https://fake.com/upload/$objectName?saraza=pepe&lalala=saraza"))
     }
 
     override fun downloadUrl(objectName: String?): Result<URL?> {
-        return Result.success(URL(("https://fake.com/download/$objectName")))
+        return Result
+            .success(
+                URL(("https://fake.com/download/$objectName?saraza=pepe&lalala=saraza"))
+            )
+
     }
 
 }

@@ -11,6 +11,7 @@ import io.ktor.routing.*
 fun Application.serialization() {
     install(ContentNegotiation) {
         gson {
+            this.disableHtmlEscaping()
         }
     }
 }
