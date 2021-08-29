@@ -1,5 +1,6 @@
 package com.muebles.ra.server.config
 
+import com.google.gson.FieldNamingPolicy
 import io.ktor.gson.*
 import io.ktor.features.*
 import io.ktor.application.*
@@ -12,6 +13,7 @@ fun Application.serialization() {
     install(ContentNegotiation) {
         gson {
             this.disableHtmlEscaping()
+            this.setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         }
     }
 }
