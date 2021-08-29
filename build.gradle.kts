@@ -31,6 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-metrics:$ktor_version")
     implementation("io.ktor:ktor-gson:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("javax.inject:javax.inject:1")
     implementation(group = "org.springframework", name = "spring-context", version = "5.3.5")
