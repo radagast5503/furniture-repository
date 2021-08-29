@@ -2,6 +2,7 @@ package com.muebles.ra.secrets
 
 import com.google.auth.oauth2.ServiceAccountCredentials
 import com.google.cloud.storage.*
+import com.muebles.ra.api.Furniture
 import com.muebles.ra.utils.Config
 import com.muebles.ra.utils.Version
 import org.slf4j.LoggerFactory
@@ -12,8 +13,8 @@ import java.net.URL
 import java.util.concurrent.TimeUnit
 
 interface URLObtainer {
-    fun uploadUrl(objectName: String?): Result<URL?>
-    fun downloadUrl(objectName: String?): Result<URL?>
+    fun uploadUrl(objectName: Furniture): Result<URL?>
+    fun downloadUrl(objectName: Furniture): Result<URL?>
 }
 
 @Configuration
@@ -31,16 +32,12 @@ open class SpringConfig {
 class FakeUrlObtainer : URLObtainer {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun uploadUrl(objectName: String?): Result<URL?> {
-        return Result.success(URL("https://fake.com/upload/$objectName?saraza=pepe&lalala=saraza"))
+    override fun uploadUrl(objectName: Furniture): Result<URL?> {
+        return Result.success(URL("https://fake.com/upload/${objectName.name}?saraza=pepe&lalala=saraza"))
     }
 
-    override fun downloadUrl(objectName: String?): Result<URL?> {
-        return Result
-            .success(
-                URL(("https://fake.com/download/$objectName?saraza=pepe&lalala=saraza"))
-            )
-
+    override fun downloadUrl(objectName: Furniture): Result<URL?> {
+        return Result.success(URL(("https://fake.com/download/${objectName.name}?saraza=pepe&lalala=saraza")))
     }
 
 }
@@ -63,11 +60,11 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
         )
     }
 
-    override fun uploadUrl(objectName: String?): Result<URL?> = runCatching {
-        signURL(objectName, HttpMethod.PUT)
+    override fun uploadUrl(furniture: Furniture): Result<URL?> = runCatching {
+        signURL("${furniture.deviceId}/${furniture.name}/", HttpMethod.PUT)
     }
 
-    override fun downloadUrl(objectName: String?): Result<URL?> = runCatching {
-        signURL(objectName, HttpMethod.GET)
+    override fun downloadUrl(furniture: Furniture): Result<URL?> = runCatching {
+        signURL("${furniture.deviceId}/${furniture.name}/*", HttpMethod.GET)
     }
 }
