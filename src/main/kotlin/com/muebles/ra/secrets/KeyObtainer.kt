@@ -21,8 +21,9 @@ class KeyObtainer @Inject constructor(private val cfg: Config) {
         val secretName = cfg.privateKeyName()
         checkNotNull(name) { "could not obtain project name" }
         checkNotNull(secretName) { "could not obtain private key name" }
+        val payload = client.accessSecretVersion(SecretVersionName.of(name, secretName, LATEST_VERSION)).payload
         Base64.getDecoder().decode(
-            client.accessSecretVersion(SecretVersionName.of(name, secretName, LATEST_VERSION)).payload.toByteArray()
+            payload.data.toByteArray()
         )
     }
 
