@@ -49,7 +49,6 @@ fun Route.furnitureRoutes(ctx: AnnotationConfigApplicationContext) {
     }
 
     post("/furniture/downloader") {
-        call.receive<Furniture>()
         ctx.getUrlObtainer().downloadUrl(call.receive<Furniture>())
             .fold({ url ->
                 run {
