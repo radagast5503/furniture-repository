@@ -51,9 +51,9 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
 
     private fun signURL(objectName: String?, method: HttpMethod, vararg options: Storage.SignUrlOption): URL? {
         val blobInfo = BlobInfo.newBuilder(BlobId.of(cfg.bucketName(), objectName)).build()
-        val urlDuration = cfg.urlDuration() a
-                checkNotNull(urlDuration) { "could not read duration from config" }
-        return storge.signUrl(
+        val urlDuration = cfg.urlDuration()
+        checkNotNull(urlDuration) { "could not read duration from config" }
+        return storage.signUrl(
             blobInfo, urlDuration, TimeUnit.MINUTES,
             Storage.SignUrlOption.httpMethod(method),
             Storage.SignUrlOption.withV4Signature(),
