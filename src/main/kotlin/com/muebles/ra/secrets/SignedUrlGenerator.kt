@@ -49,19 +49,20 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
     private val storage =
         StorageOptions.newBuilder().setCredentials(credentials).setProjectId(cfg.projectName()).build().service
 
-    private fun signURL(objectName: String?, method: HttpMethod): URL? {
+    private fun signURL(objectName: String?, method: HttpMethod,vararg options: Storage.SignUrlOption): URL? {
         val blobInfo = BlobInfo.newBuilder(BlobId.of(cfg.bucketName(), objectName)).build()
         val urlDuration = cfg.urlDuration()
         checkNotNull(urlDuration) { "could not read duration from config" }
         return storage.signUrl(
             blobInfo, urlDuration, TimeUnit.MINUTES,
             Storage.SignUrlOption.httpMethod(method),
-            Storage.SignUrlOption.withV4Signature()
-        )
+            Storage.SignUrlOption.withV4Signature(),
+            *options)
     }
 
     override fun uploadUrl(furniture: Furniture): Result<URL?> = runCatching {
-        signURL("${furniture.deviceId}/${furniture.name}", HttpMethod.PUT)
+        signURL("${furniture.deviceId}/${furniture.name}", HttpMethod.PUT
+            ,Storage.SignUrlOption.withExtHeaders(mapOf("x-goog-resumable" to "start")))
     }
 
     override fun downloadUrl(furniture: Furniture): Result<URL?> = runCatching {

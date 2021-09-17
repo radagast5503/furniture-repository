@@ -42,10 +42,15 @@ fun Application.router(ctx: AnnotationConfigApplicationContext) {
 fun Route.furnitureRoutes(ctx: AnnotationConfigApplicationContext) {
 
     post("/furniture/uploader") {
-        ctx.getUrlObtainer().uploadUrl(call.receive<Furniture>())
-            .fold({ url -> call.respond(FurnitureURL(url.toString())) }) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to it.toString()))
-            }
+        val furniture = call.receive<Furniture>()
+        if (furniture.valid()) {
+            ctx.getUrlObtainer().uploadUrl(furniture)
+                .fold({ url -> call.respond(FurnitureURL(url.toString())) }) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to it.toString()))
+                }
+        } else {
+            call.respond(HttpStatusCode.BadRequest,"A field of the furniture is null or empty")
+        }
     }
 
     post("/furniture/downloader") {
