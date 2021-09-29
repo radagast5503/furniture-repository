@@ -64,7 +64,7 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
     override fun uploadUrl(furniture: Furniture): Result<URL?> = runCatching {
         signURL(
             "${furniture.deviceId}/${furniture.name}",
-            HttpMethod.POST,
+            HttpMethod.PUT,
             Storage.SignUrlOption.withExtHeaders(mapOf("x-goog-resumable" to "start"))
         )
     }
