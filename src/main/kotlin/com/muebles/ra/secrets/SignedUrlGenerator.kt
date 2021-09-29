@@ -65,7 +65,8 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
         signURL(
             "${furniture.deviceId}/${furniture.name}",
             HttpMethod.POST,
-            Storage.SignUrlOption.withExtHeaders(mapOf("x-goog-resumable" to "start"))
+            Storage.SignUrlOption.withExtHeaders(mapOf("x-goog-resumable" to "start")),
+            Storage.SignUrlOption.withQueryParams(mapOf("uploadType" to "resumable"))
         )
     }
 
