@@ -23,6 +23,7 @@ application {
 
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
@@ -36,11 +37,17 @@ dependencies {
     implementation("javax.inject:javax.inject:1")
     implementation(group = "org.springframework", name = "spring-context", version = "5.3.5")
     implementation(kotlin("stdlib"))
+    implementation("com.google.code.gson:gson:2.8.8")
 
     //google dependencies
     implementation("com.google.cloud:google-cloud-storage:2.0.2")
     implementation(platform("com.google.cloud:libraries-bom:21.0.0"))
     implementation("com.google.cloud:google-cloud-secretmanager:1.7.2")
+    implementation("com.google.firebase:firebase-messaging:22.0.0")
+    implementation("com.google.firebase:firebase-admin:8.0.1")
+    implementation("com.google.cloud:google-cloud-pubsub:1.114.4")
+
+    runtimeOnly("com.google.gms:google-services:4.2.0")
 
     compileOnly("org.projectlombok:lombok:1.18.20")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")

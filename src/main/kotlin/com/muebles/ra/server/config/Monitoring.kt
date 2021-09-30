@@ -11,6 +11,4 @@ fun Application.monitoring() {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/") }
     }
-
-
 }
