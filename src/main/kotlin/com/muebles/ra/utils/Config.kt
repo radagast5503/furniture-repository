@@ -20,4 +20,9 @@ class Config {
     fun bucketName(): String? = config.tryGetString("gcp.storage.bucket.name")
 
     fun urlDuration(): Long? = config.tryGetLong("gcp.signing.url-duration")
+
+    fun subscriptionId(): String? = config.tryGetString("gcp.subscription-id")
+
+    fun firebaseServiceAccountId(): String? = config.tryGetString("gcp.firebase.service-account-id")
+
 }
