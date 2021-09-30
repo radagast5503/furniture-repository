@@ -3,14 +3,17 @@ package com.muebles.ra.server.config
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import com.muebles.ra.utils.Config
 import io.ktor.application.*
+import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 
-fun Application.initializeFirebase() {
+fun Application.initializeFirebase(ctx: AnnotationConfigApplicationContext) {
+    val config = ctx.getBean(Config::class.java)
     val options = FirebaseOptions.builder()
         .setCredentials(GoogleCredentials.getApplicationDefault())
-        .setServiceAccountId("AAAAMXTaxWg:APA91bEgOPr1j2oBHQxhmmJKtSRHkq91ppZxivRtYsIotoGt6Ww2ox7Yj8tTvCvYL1gdXm0_XIFHd35wR_wwKkliVa6NPyGoFVMh-0AZdN5dbuZtWb2rtR3MSx5GKnHSCacfsyQJc-hA")
-        .setProjectId("muebles-ra-a108")
+        .setServiceAccountId(config.firebaseServiceAccountId())
+        .setProjectId(config.projectName())
         .build()
 
     FirebaseApp.initializeApp(options)

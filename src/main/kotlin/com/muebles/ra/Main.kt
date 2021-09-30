@@ -8,10 +8,10 @@ import io.ktor.server.netty.*
 
 fun main(args: Array<String>) {
     embeddedServer(Netty,8080, host = "0.0.0.0") {
-        initializeFirebase()
-        val pushSenderApplication = PushSenderService();
-        PubSubSubscriber(pushSenderApplication).createSubscription()
-        router(injectionManagement())
+        val ctx = injectionManagement();
+        initializeFirebase(ctx)
+        pubSubSubscriberCreateSubscription(ctx)
+        router(ctx)
         httpConfig()
         monitoring()
         serialization()

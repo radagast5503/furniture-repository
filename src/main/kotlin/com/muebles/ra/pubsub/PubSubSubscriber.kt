@@ -17,13 +17,12 @@ import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
 @Component
-class PubSubSubscriber @Inject constructor(private val pushSenderService: PushSenderService) {
+class PubSubSubscriber @Inject constructor(private val pushSenderService: PushSenderService, private val cfg: Config) {
 
     @Throws(Exception::class)
     fun createSubscription() {
-        // TODO(developer): Replace these variables before running the sample.
-        val projectId = "muebles-ra-a108"
-        val subscriptionId = "generated-furniture-sub"
+        val projectId = cfg.projectName()
+        val subscriptionId = cfg.subscriptionId()
         subscribeAsync(projectId, subscriptionId)
     }
 
