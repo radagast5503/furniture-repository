@@ -44,26 +44,29 @@ class FakeUrlObtainer : URLObtainer {
 
 class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) : URLObtainer {
 
+    private val logger = LoggerFactory.getLogger(this::class.java)
     private val credentials = ServiceAccountCredentials.fromStream(ByteArrayInputStream(keyObtainer.getKey()))
 
     private val storage =
         StorageOptions.newBuilder().setCredentials(credentials).setProjectId(cfg.projectName()).build().service
 
-    private fun signURL(objectName: String?, method: HttpMethod, vararg options: Storage.SignUrlOption): URL? {
+    private fun signURL(objectName: String, method: HttpMethod, vararg options: Storage.SignUrlOption): URL? {
         val blobInfo = BlobInfo.newBuilder(BlobId.of(cfg.bucketName(), objectName)).build()
         val urlDuration = cfg.urlDuration()
         checkNotNull(urlDuration) { "could not read duration from config" }
-        return storage.signUrl(
+        val signUrl = storage.signUrl(
             blobInfo, urlDuration, TimeUnit.MINUTES,
             Storage.SignUrlOption.httpMethod(method),
             Storage.SignUrlOption.withV4Signature(),
             *options
         )
+        logger.info("Generated URL $signUrl for method ${method.name()}")
+        return signUrl
     }
 
     override fun uploadUrl(furniture: Furniture): Result<URL?> = runCatching {
         signURL(
-            "${furniture.deviceId}/${furniture.name}",
+            furniture.reference(),
             HttpMethod.POST,
             Storage.SignUrlOption.withExtHeaders(mapOf("x-goog-resumable" to "start")),
             Storage.SignUrlOption.withQueryParams(mapOf("uploadType" to "resumable"))
@@ -71,6 +74,6 @@ class SignedUrlGenerator constructor(val cfg: Config, keyObtainer: KeyObtainer) 
     }
 
     override fun downloadUrl(furniture: Furniture): Result<URL?> = runCatching {
-        signURL("${furniture.deviceId}/${furniture.name}-virtualized", HttpMethod.GET)
+        signURL(furniture.virtualizedReference(), HttpMethod.GET)
     }
 }
