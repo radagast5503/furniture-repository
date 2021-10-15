@@ -10,18 +10,8 @@ class PushSenderService {
 
     fun sendNotificationToPhone(notification: PubSubNotification) {
         val message: Message = Message.builder()
-            .setNotification(Notification.builder().setBody(body(notification.status))
-                .setTitle(title(notification.status)).setImage("https://image.flaticon.com/icons/png/512/1198/1198317.png")
-                .build())
             .putData("furniture_status", notification.status)
             .putData("furniture_name", notification.furnitureName)
-            .setAndroidConfig(AndroidConfig.builder()
-                .setNotification(AndroidNotification.builder()
-                    .setIcon("https://serving.photos.photobox.com/560818053260870777ccf605967aac30263cfd812e74836ebdb724893126c3dd476cc3a0.jpg")
-                    .setColor("#715696")
-                    .build())
-                .setPriority(AndroidConfig.Priority.HIGH)
-                .build())
             .setToken(notification.fcm)
             .build()
         // Send a message to the device corresponding to the provided
@@ -32,7 +22,7 @@ class PushSenderService {
     }
 
     private fun title(status: String) : String {
-        return if (NotificationStatus.SUCCESS.statusName == status)  "Tu mueble esta listo!" else "Tuvimos un error :("
+        return if (NotificationStatus.SUCCESS.statusName == status)  "Tu mueble esta listo!" else "Tuvimos un problema :("
     }
 
     private fun body(status: String) : String {
