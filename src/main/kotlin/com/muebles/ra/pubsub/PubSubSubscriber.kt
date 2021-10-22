@@ -38,7 +38,7 @@ class PubSubSubscriber @Inject constructor(private val pushSenderService: PushSe
             subscriber = Subscriber.newBuilder(subscriptionName, receiver).build()
             subscriber.startAsync().awaitRunning()
             logger.info("Listening for messages on %s:\n", subscriptionName.toString())
-            subscriber.awaitTerminated(30, TimeUnit.SECONDS)
+            //subscriber.awaitTerminated(30, TimeUnit.SECONDS)
         } catch (timeoutException: TimeoutException) {
             subscriber?.stopAsync()
         }
